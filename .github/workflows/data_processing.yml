@@ -36,7 +36,7 @@ jobs:
           python scripts/process_data.py
 
       - name: Upload processed data
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: processed-data
           path: processed_data/
