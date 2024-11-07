@@ -26,6 +26,15 @@ def process_data(file_path, output_folder, sample_size):
     # Wczytanie pliku CSV do DataFrame
     data = pd.read_csv(file_path)
 
+    # Wyświetlenie podstawowych informacji o oryginalnym zbiorze danych
+    print("\nPodstawowe informacje o oryginalnym zbiorze danych:")
+    print(f"Liczba rekordów: {len(data)}")
+    print(f"Liczba kolumn: {len(data.columns)}")
+    print("\nTypy danych dla każdej kolumny:")
+    print(data.dtypes)
+    print("\nPodstawowe statystyki dla danych numerycznych:")
+    print(data.describe())
+
     # Ograniczenie do 5000 losowych rekordów
     if len(data) > sample_size:
         data = data.sample(n=sample_size, random_state=42)
@@ -41,7 +50,9 @@ def process_data(file_path, output_folder, sample_size):
     train_data.to_csv(os.path.join(output_folder, 'train_data.csv'), index=False)
     val_data.to_csv(os.path.join(output_folder, 'val_data.csv'), index=False)
 
-    print("Podział danych zakończony. Zbiory zapisane w folderze 'processed_data'.")
+    print("\nPodział danych zakończony.")
+    print(f"Liczba rekordów w zbiorze treningowym: {len(train_data)}")
+    print(f"Liczba rekordów w zbiorze walidacyjnym: {len(val_data)}")
 
 
 # Główna funkcja
