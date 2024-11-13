@@ -3,5 +3,5 @@ scikit-learn
 matplotlib
 seaborn
 pandas-profiling
-autogluon
+autogluon.timeseries[all]==1.1.1
 kaggle
