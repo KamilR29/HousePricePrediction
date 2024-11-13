@@ -16,21 +16,16 @@ sample_size = 5000
 
 # Funkcja do pobierania danych z Kaggle
 def download_data(dataset, data_folder, file_name):
-    # Upewnij się, że istnieje folder na dane
     if not os.path.exists(data_folder):
         os.makedirs(data_folder)
-
-    # Pobranie danych z Kaggle
     os.system(f'kaggle datasets download -d {dataset} -p {data_folder} --unzip')
     print(f"Pobrano plik {file_name} do folderu {data_folder}")
 
 
 # Funkcja do przetwarzania danych: ograniczenie do 5000 rekordów i podział na zbiory
 def process_data(file_path, output_folder, sample_size):
-    # Wczytanie pliku CSV do DataFrame
     data = pd.read_csv(file_path)
 
-    # Wyświetlenie podstawowych informacji o oryginalnym zbiorze danych
     print("\nPodstawowe informacje o oryginalnym zbiorze danych:")
     print(f"Liczba rekordów: {len(data)}")
     print(f"Liczba kolumn: {len(data.columns)}")
@@ -85,9 +80,10 @@ def data_exploration(data):
         plt.title(f"Wykres pudełkowy dla {column}")
         plt.show()
 
-    # Macierz korelacji
+    # Obliczanie macierzy korelacji tylko dla kolumn numerycznych
+    numeric_data = data.select_dtypes(include='number')  # Wybierz tylko kolumny numeryczne
     plt.figure(figsize=(10, 8))
-    sns.heatmap(data.corr(), annot=True, fmt=".2f", cmap="coolwarm")
+    sns.heatmap(numeric_data.corr(), annot=True, fmt=".2f", cmap="coolwarm")
     plt.title("Macierz korelacji")
     plt.show()
 
@@ -126,7 +122,7 @@ def main():
     train_data, val_data = process_data(file_path, output_folder, sample_size)
 
     # Automatyczny dobór modeli z AutoGluon
-    label_column = 'label_column_name'  # Ustaw nazwę kolumny docelowej
+    label_column = 'popularity'  # Ustaw nazwę kolumny docelowej, np. 'popularity'
     predictor = model_selection(train_data, label_column)
 
     # Ocena prototypowego modelu
