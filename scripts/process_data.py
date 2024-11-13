@@ -4,7 +4,8 @@ from sklearn.model_selection import train_test_split
 from autogluon.tabular import TabularPredictor
 import matplotlib.pyplot as plt
 import seaborn as sns
-from pandas_profiling import ProfileReport
+from ydata_profiling import ProfileReport
+
 
 # Ustawienie identyfikatora zestawu danych Kaggle oraz ścieżki docelowej
 dataset = 'zaheenhamidani/ultimate-spotify-tracks-db'
