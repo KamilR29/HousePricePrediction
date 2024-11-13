@@ -7,7 +7,7 @@ import seaborn as sns
 from ydata_profiling import ProfileReport
 
 
-# Ustawienie identyfikatora zestawu danych Kaggle oraz ścieżki docelowej
+# Ustawienie identyfikatora zestawu danych Kaggle oraz ścieżki docelowej1
 dataset = 'zaheenhamidani/ultimate-spotify-tracks-db'
 file_name = 'SpotifyFeatures.csv'
 data_folder = 'data'
