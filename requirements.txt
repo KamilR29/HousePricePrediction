@@ -1,0 +1,7 @@
+pandas
+scikit-learn
+matplotlib
+seaborn
+pandas-profiling
+autogluon.timeseries[all]==1.1.1
+kaggle

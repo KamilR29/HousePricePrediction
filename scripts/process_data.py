@@ -1,6 +1,10 @@
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from autogluon.tabular import TabularPredictor
+import matplotlib.pyplot as plt
+import seaborn as sns
+from pandas_profiling import ProfileReport
 
 # Ustawienie identyfikatora zestawu danych Kaggle oraz ścieżki docelowej
 dataset = 'zaheenhamidani/ultimate-spotify-tracks-db'
@@ -54,12 +58,81 @@ def process_data(file_path, output_folder, sample_size):
     print(f"Liczba rekordów w zbiorze treningowym: {len(train_data)}")
     print(f"Liczba rekordów w zbiorze walidacyjnym: {len(val_data)}")
 
+    return train_data, val_data
+
+
+# Funkcja eksploracyjna EDA
+def data_exploration(data):
+    print("\nPodstawowe informacje o zbiorze danych:")
+    print(data.info())
+
+    print("\nStatystyki opisowe dla zmiennych numerycznych:")
+    print(data.describe())
+
+    print("\nAnaliza wartości brakujących:")
+    missing_values = data.isnull().sum()
+    print(missing_values[missing_values > 0])
+
+    # Histogramy dla zmiennych numerycznych
+    data.hist(bins=30, figsize=(15, 10))
+    plt.suptitle("Histogramy zmiennych numerycznych")
+    plt.show()
+
+    # Wykresy pudełkowe dla zmiennych numerycznych
+    for column in data.select_dtypes(include='number').columns:
+        plt.figure(figsize=(8, 4))
+        sns.boxplot(x=data[column])
+        plt.title(f"Wykres pudełkowy dla {column}")
+        plt.show()
+
+    # Macierz korelacji
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(data.corr(), annot=True, fmt=".2f", cmap="coolwarm")
+    plt.title("Macierz korelacji")
+    plt.show()
+
+
+# Automatyczne generowanie raportu EDA
+def generate_report(data):
+    profile = ProfileReport(data, title="Raport EDA", explorative=True)
+    profile.to_file("eda_report.html")
+    print("Raport EDA został zapisany jako 'eda_report.html'")
+
+
+# Funkcja do automatycznego doboru modeli z AutoGluon
+def model_selection(train_data, label_column):
+    predictor = TabularPredictor(label=label_column, path="AutogluonModels").fit(train_data)
+    leaderboard = predictor.leaderboard(train_data, silent=True)
+    print("\nRekomendacje modeli:")
+    print(leaderboard)
+    return predictor
+
 
 # Główna funkcja
 def main():
     file_path = os.path.join(data_folder, file_name)
     download_data(dataset, data_folder, file_name)
-    process_data(file_path, output_folder, sample_size)
+
+    # Wczytanie danych i ograniczenie do losowej próbki 5000 rekordów
+    data = pd.read_csv(file_path)
+    if len(data) > sample_size:
+        data = data.sample(n=sample_size, random_state=42)
+
+    # Eksploracja danych i raport EDA
+    data_exploration(data)
+    generate_report(data)
+
+    # Podział na zbiór treningowy i walidacyjny
+    train_data, val_data = process_data(file_path, output_folder, sample_size)
+
+    # Automatyczny dobór modeli z AutoGluon
+    label_column = 'label_column_name'  # Ustaw nazwę kolumny docelowej
+    predictor = model_selection(train_data, label_column)
+
+    # Ocena prototypowego modelu
+    performance = predictor.evaluate(val_data)
+    print("\nWyniki modelu na zbiorze walidacyjnym:")
+    print(performance)
 
 
 if __name__ == "__main__":

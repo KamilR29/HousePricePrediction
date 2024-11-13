@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   data-processing:
@@ -20,7 +21,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pandas scikit-learn kaggle
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Configure Kaggle API key
         env:
@@ -35,8 +37,18 @@ jobs:
         run: |
           python scripts/process_data.py
 
+      - name: Upload EDA report
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: eda-report
+          path: eda_report.html
+
       - name: Upload processed data
+        if: success()
         uses: actions/upload-artifact@v3
         with:
           name: processed-data
-          path: processed_data/
+          path: |
+            processed_data/train_data.csv
+            processed_data/val_data.csv
