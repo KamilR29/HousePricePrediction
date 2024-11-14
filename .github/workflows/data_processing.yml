@@ -27,4 +27,4 @@ jobs:
         KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
         KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       run: |
-        python process_data.py
+        python scripts/process_data.py
