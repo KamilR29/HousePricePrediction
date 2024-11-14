@@ -126,4 +126,36 @@ def perform_automl(X, y):
     for i, (model, score) in enumerate(top_models, 1):
         print(f"{i}. Model: {model} | Wynik CV: {score}")
 
-    # Wybór najlepszego model
+    # Wybór najlepszego modelu i jego ocena na zbiorze testowym
+    print("\nNajlepszy model wybrany przez TPOT:")
+    print(tpot.fitted_pipeline_)
+    y_pred = tpot.predict(X_test)
+    rmse = mean_squared_error(y_test, y_pred, squared=False)
+    print(f"RMSE dla najlepszego modelu na zbiorze testowym: {rmse}")
+
+    # Zapis raportu z wynikami do pliku JSON
+    results = {
+        "top_3_models": [{"model": model, "cv_score": score} for model, score in top_models],
+        "best_model_rmse": rmse
+    }
+    with open("model_report.json", "w") as f:
+        json.dump(results, f, indent=4)
+
+    # Zapis najlepszej pipeline
+    tpot.export("best_model_pipeline.py")
+
+
+if __name__ == "__main__":
+    download_data()
+    df = pd.read_csv("data.csv")
+    data_exploration(df)
+    analyze_distributions(df)
+    analyze_missing_values(df)
+    correlation_matrix(df)
+    generate_eda_report(df)
+    train, additional_train = split_data(df)
+    train.to_csv("train.csv", index=False)
+    additional_train.to_csv("additional_train.csv", index=False)
+
+    X, y = load_and_preprocess_data()
+    perform_automl(X, y)
