@@ -1,48 +1,30 @@
-name: Data Processing Pipeline
+name: HouseData Analysis
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
-  download_dataset:
+  analyze-data:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Kaggle API Key
-        env:
-          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
 
-      - name: Download Dataset from Kaggle
-        run: |
-          pip install kaggle
-          python data_processing.py --step load_dataset
+    - name: Install dependencies
+      run: |
+        pip install pandas scikit-learn kaggle
 
-  display_info:
-    runs-on: ubuntu-latest
-    needs: download_dataset
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Display Dataset Information
-        run: |
-          pip install pandas
-          python data_processing.py --step display_info
-
-  split_data:
-    runs-on: ubuntu-latest
-    needs: display_info
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Split Dataset into Train and Test Sets
-        run: |
-          pip install pandas scikit-learn
-          python data_processing.py --step split_data
+    - name: Download and analyze Kaggle dataset
+      env:
+        KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+        KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+      run: |
+        python script.py
