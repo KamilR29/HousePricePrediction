@@ -3,7 +3,10 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from tpot import TPOTClassifier
 import sweetviz as sv
+import json
 
 # Ustawienia do wizualizacji
 sns.set(style="whitegrid")
@@ -88,6 +91,38 @@ def split_data(df):
     return train, additional_train
 
 
+# Load and preprocess the data for model selection
+def load_and_preprocess_data():
+    # Przyjmujemy, że dane zostały wcześniej wczytane i przetworzone
+    df = pd.read_csv("train.csv")  # Ładujemy przygotowany zbiór treningowy
+    X = df.drop(columns=["target"])  # Zmienna 'target' to nazwa kolumny docelowej
+    y = df["target"]
+    return X, y
+
+
+# Perform AutoML analysis with TPOT
+def perform_automl(X, y):
+    # Dzielimy dane na zbiory treningowy i testowy
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Inicjalizacja TPOT i dopasowanie modelu
+    tpot = TPOTClassifier(generations=5, population_size=20, verbosity=2, random_state=42)
+    tpot.fit(X_train, y_train)
+
+    # Wyświetlenie wyników i zapis najlepszego modelu
+    print("Najlepszy model wybrany przez TPOT:")
+    print(tpot.fitted_pipeline_)
+
+    # Ocena wydajności modelu
+    y_pred = tpot.predict(X_test)
+    report = classification_report(y_test, y_pred, output_dict=True)
+    with open("model_report.json", "w") as f:
+        json.dump(report, f, indent=4)
+
+    # Zapis najlepszej pipeline
+    tpot.export("best_model_pipeline.py")
+
+
 if __name__ == "__main__":
     # Step 1: Download data
     download_data()
@@ -116,3 +151,9 @@ if __name__ == "__main__":
     # Optional: Save splits to CSV files if needed for further use
     train.to_csv("train.csv", index=False)
     additional_train.to_csv("additional_train.csv", index=False)
+
+    # Step 9: Load and preprocess data for AutoML
+    X, y = load_and_preprocess_data()
+
+    # Step 10: Perform AutoML to get model recommendations
+    perform_automl(X, y)

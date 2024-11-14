@@ -1,4 +1,4 @@
-name: HouseData Analysis
+name: HouseData Analysis and Model Selection
 
 on:
   push:
@@ -29,10 +29,10 @@ jobs:
       run: |
         python scripts/process_data.py
 
-    - name: Upload artifacts
+    - name: Upload EDA and model artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: EDA-Reports
+        name: Analysis-And-Model-Artifacts
         path: |
           histograms.png
           boxplots.png
@@ -40,3 +40,5 @@ jobs:
           missing_values_heatmap.png
           correlation_matrix.png
           eda_report.html
+          model_report.json
+          best_model_pipeline.py
