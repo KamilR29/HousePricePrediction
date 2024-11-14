@@ -96,7 +96,7 @@ def load_and_preprocess_data():
     df['year'] = df['date'].dt.year
     df['month'] = df['date'].dt.month
     df['day'] = df['date'].dt.day
-    df = df.drop(columns=["date"])
+    df = df.drop(columns=["date", "street", "city", "statezip", "country"])  # Usuwamy kolumny tekstowe
 
     X = df.drop(columns=["price"])
     y = df["price"]
