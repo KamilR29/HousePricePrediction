@@ -1,45 +1,56 @@
-# Spotify Song Recommendation System
+# House Price Prediction Project
 
-## Opis projektu
-Celem projektu jest stworzenie systemu rekomendacji utworów muzycznych na podstawie ich cech, takich jak energia, taneczność, tempo i popularność. Projekt ten będzie pomocny dla platform streamingowych oraz użytkowników, którzy chcą odkrywać nową muzykę dopasowaną do ich gustu.
+## 1. Opis Tematu i Problemu Biznesowego
 
-## Cel biznesowy/techniczny
-Projekt zaspokaja potrzebę personalizacji rekomendacji w aplikacjach muzycznych, co zwiększa zaangażowanie użytkowników oraz pomaga im odkrywać nową muzykę zgodną z ich preferencjami.
+Ceny nieruchomości są kluczowym czynnikiem dla sektora nieruchomości, inwestorów, agentów oraz klientów indywidualnych. Dokładne prognozowanie cen domów pomaga nie tylko w podejmowaniu lepszych decyzji inwestycyjnych, ale także w ocenie wartości rynkowej nieruchomości. Projekt ten ma na celu stworzenie modelu predykcyjnego, który przewiduje cenę domu na podstawie różnych atrybutów, takich jak powierzchnia, liczba pokoi, lokalizacja, stan techniczny budynku oraz inne cechy fizyczne. 
 
-## Zbiór danych
-**Dataset:** "Spotify Songs Dataset" dostępny na Kaggle.
-- **Źródło:** [Spotify Songs Dataset na Kaggle](https://www.kaggle.com/zaheenhamidani/ultimate-spotify-tracks-db)
-- **Zawartość:** Cechy muzyczne utworów
-- **Rozmiar:** Około 32 833 rekordów (zaleca się ograniczenie do mniejszych próbek)
-- **Cechy numeryczne:** popularność, energia, tempo, taneczność, głośność i inne
+Głównym celem projektu jest stworzenie prototypowego modelu predykcyjnego, który zminimalizuje błąd prognozy, pozwalając na bardziej precyzyjne szacowanie cen domów, co może wspierać decyzje zakupowe i sprzedażowe na rynku nieruchomości.
 
-## Zakres projektu i struktura modelu
+## 2. Źródło Danych i Charakterystyka
 
-1. **Pobieranie i przetwarzanie danych**
-   - Pobranie danych z Kaggle.
-   - Wstępne przetwarzanie danych: usunięcie braków, normalizacja cech.
+### Źródło Danych
+Dane do projektu pochodzą z **[Kaggle - House Sales in King County, USA](https://www.kaggle.com/datasets/shree1992/housedata)**. Zbiór danych zawiera informacje o domach sprzedanych w regionie King County w stanie Waszyngton, USA.
 
-2. **Eksploracja danych**
-   - Analiza rozkładu cech i ich korelacji.
-   - Wizualizacja danych i analiza wpływu cech na popularność utworów.
+### Charakterystyka Danych
+Zbiór danych zawiera 4600 rekordów, z informacjami na temat sprzedanych domów, w tym następujące kolumny:
 
-3. **Czyszczenie i przygotowanie danych**
-   - Usunięcie brakujących danych oraz standaryzacja zmiennych numerycznych.
+- `date`: Data sprzedaży domu.
+- `price`: Cena sprzedaży domu (wartość docelowa do przewidywania).
+- `bedrooms`: Liczba sypialni.
+- `bathrooms`: Liczba łazienek.
+- `sqft_living`: Powierzchnia mieszkalna (w stopach kwadratowych).
+- `sqft_lot`: Powierzchnia działki (w stopach kwadratowych).
+- `floors`: Liczba pięter.
+- `waterfront`: Wskaźnik obecności widoku na wodę.
+- `view`: Ocena widoku (0-4).
+- `condition`: Stan techniczny budynku (1-5).
+- `sqft_above`: Powierzchnia nad poziomem ziemi.
+- `sqft_basement`: Powierzchnia piwnicy.
+- `yr_built`: Rok budowy domu.
+- `yr_renovated`: Rok ostatniego remontu.
+- `street`, `city`, `statezip`, `country`: Lokalizacja nieruchomości.
 
-4. **Trenowanie modelu rekomendacji**
-   - Wybór i implementacja modelu rekomendacji na podstawie cech utworów.
+### Uzasadnienie Wyboru Danych
+Dane te zostały wybrane, ponieważ zawierają szczegółowe informacje o sprzedaży nieruchomości, które są niezbędne do budowy modelu predykcyjnego dla cen domów. Zawierają różnorodne cechy, które mogą mieć wpływ na cenę nieruchomości, takie jak powierzchnia, liczba pokoi, stan techniczny, rok budowy, a także lokalizacja. Dzięki tak szerokiej gamie zmiennych, model będzie mógł analizować, jakie cechy mają największy wpływ na wartość nieruchomości i dokonywać dokładnych prognoz.
 
-5. **Walidacja modelu**
-   - Ocena skuteczności na zbiorze testowym przy użyciu metryk takich jak MSE lub MAE.
+## 3. Cele Projektu
 
-6. **Publikacja i wdrożenie**
-   - Konteneryzacja modelu w Dockerze oraz stworzenie API do prognozowania jakości wina.
+Głównym celem projektu jest stworzenie modelu predykcyjnego, który przewiduje cenę domu na podstawie wybranych cech nieruchomości. Cele szczegółowe obejmują:
 
-7. **Dokumentacja i prezentacja wyników**
-   - Opracowanie dokumentacji oraz prezentacja wyników.
+1. **Przygotowanie i wstępna analiza danych** – eksploracja i oczyszczenie danych w celu usunięcia wartości odstających, braków oraz sprawdzenie rozkładów cech.
+2. **Budowa modelu predykcyjnego** – wykorzystanie narzędzi AutoML (takich jak TPOT) do automatycznego wyboru modeli i dostosowania hiperparametrów, aby uzyskać najlepsze możliwe wyniki.
+3. **Ewaluacja i optymalizacja modelu** – porównanie wyników różnych modeli, wybranie najlepszego i jego dalsza optymalizacja.
+4. **Dokumentacja i wizualizacja wyników** – przygotowanie raportu końcowego oraz wizualizacja wyników, aby zapewnić zrozumienie działania i skuteczności modelu.
 
-## Instrukcja uruchomienia
+## 4. Struktura Pracy nad Modelem
 
-1. **Klonowanie repozytorium**
-   ```bash
-   git clone https://github.com/twojanazwa_uzytkownika/SpotifySongRecommendation.git
+Poniżej przedstawiono diagram przepływu pracy nad modelem, który przedstawia główne etapy projektu:
+
+```mermaid
+flowchart TD
+    A[Zbieranie i analiza danych] --> B[Przetwarzanie danych i oczyszczanie]
+    B --> C[Analiza eksploracyjna danych (EDA)]
+    C --> D[Wykorzystanie AutoML do selekcji modelu]
+    D --> E[Trening i optymalizacja najlepszego modelu]
+    E --> F[Ewaluacja modelu na zbiorze testowym]
+    F --> G[Dokumentacja i raport końcowy]
