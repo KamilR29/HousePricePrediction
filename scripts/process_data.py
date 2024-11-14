@@ -95,8 +95,8 @@ def split_data(df):
 def load_and_preprocess_data():
     # Przyjmujemy, że dane zostały wcześniej wczytane i przetworzone
     df = pd.read_csv("train.csv")  # Ładujemy przygotowany zbiór treningowy
-    X = df.drop(columns=["target"])  # Zmienna 'target' to nazwa kolumny docelowej
-    y = df["target"]
+    X = df.drop(columns=["price"])  # Zmienna 'price' to nasza kolumna docelowa
+    y = df["price"]
     return X, y
 
 
