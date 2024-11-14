@@ -65,8 +65,10 @@ def analyze_missing_values(df):
 
 # Correlation matrix
 def correlation_matrix(df):
+    # Wybierz tylko kolumny numeryczne
+    numeric_df = df.select_dtypes(include=['number'])
     plt.figure(figsize=(12, 8))
-    sns.heatmap(df.corr(), annot=True, fmt=".2f", cmap="coolwarm")
+    sns.heatmap(numeric_df.corr(), annot=True, fmt=".2f", cmap="coolwarm")
     plt.title("Correlation Matrix")
     plt.savefig("correlation_matrix.png")
     plt.close()
