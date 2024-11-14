@@ -6,14 +6,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from ydata_profiling import ProfileReport
 
-
-# Ustawienie identyfikatora zestawu danych Kaggle oraz ścieżki docelowej1
-dataset = 'zaheenhamidani/ultimate-spotify-tracks-db'
-file_name = 'SpotifyFeatures.csv'
+# Ustawienie identyfikatora zestawu danych Kaggle oraz ścieżki docelowej
+dataset = 'shree1992/housedata'
+file_name = 'data.csv'
 data_folder = 'data'
 output_folder = 'processed_data'
 sample_size = 5000
-
 
 # Funkcja do pobierania danych z Kaggle
 def download_data(dataset, data_folder, file_name):
@@ -21,7 +19,6 @@ def download_data(dataset, data_folder, file_name):
         os.makedirs(data_folder)
     os.system(f'kaggle datasets download -d {dataset} -p {data_folder} --unzip')
     print(f"Pobrano plik {file_name} do folderu {data_folder}")
-
 
 # Funkcja do przetwarzania danych: ograniczenie do 5000 rekordów i podział na zbiory
 def process_data(file_path, output_folder, sample_size):
@@ -56,7 +53,6 @@ def process_data(file_path, output_folder, sample_size):
 
     return train_data, val_data
 
-
 # Funkcja eksploracyjna EDA
 def data_exploration(data):
     print("\nPodstawowe informacje o zbiorze danych:")
@@ -82,19 +78,17 @@ def data_exploration(data):
         plt.show()
 
     # Obliczanie macierzy korelacji tylko dla kolumn numerycznych
-    numeric_data = data.select_dtypes(include='number')  # Wybierz tylko kolumny numeryczne
+    numeric_data = data.select_dtypes(include='number')
     plt.figure(figsize=(10, 8))
     sns.heatmap(numeric_data.corr(), annot=True, fmt=".2f", cmap="coolwarm")
     plt.title("Macierz korelacji")
     plt.show()
-
 
 # Automatyczne generowanie raportu EDA
 def generate_report(data):
     profile = ProfileReport(data, title="Raport EDA", explorative=True)
     profile.to_file("eda_report.html")
     print("Raport EDA został zapisany jako 'eda_report.html'")
-
 
 # Funkcja do automatycznego doboru modeli z AutoGluon
 def model_selection(train_data, label_column):
@@ -103,7 +97,6 @@ def model_selection(train_data, label_column):
     print("\nRekomendacje modeli:")
     print(leaderboard)
     return predictor
-
 
 # Główna funkcja
 def main():
@@ -123,14 +116,13 @@ def main():
     train_data, val_data = process_data(file_path, output_folder, sample_size)
 
     # Automatyczny dobór modeli z AutoGluon
-    label_column = 'popularity'  # Ustaw nazwę kolumny docelowej, np. 'popularity'
+    label_column = 'price'  # Ustaw nazwę kolumny docelowej, np. 'price'
     predictor = model_selection(train_data, label_column)
 
     # Ocena prototypowego modelu
     performance = predictor.evaluate(val_data)
     print("\nWyniki modelu na zbiorze walidacyjnym:")
     print(performance)
-
 
 if __name__ == "__main__":
     main()
