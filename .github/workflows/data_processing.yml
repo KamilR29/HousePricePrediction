@@ -30,7 +30,7 @@ jobs:
         python scripts/process_data.py
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: EDA-Reports
         path: |
