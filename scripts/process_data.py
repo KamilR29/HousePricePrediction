@@ -7,6 +7,7 @@ from sklearn.metrics import mean_squared_error
 from tpot import TPOTRegressor
 import sweetviz as sv
 import json
+from operator import itemgetter
 
 # Ustawienia do wizualizacji
 sns.set(style="whitegrid")
@@ -89,7 +90,7 @@ def split_data(df):
 
 # Load and preprocess the data for model selection
 def load_and_preprocess_data():
-    df = pd.read_csv("train.csv")  # Ładujemy przygotowany zbiór treningowy
+    df = pd.read_csv("train.csv")
 
     # Przekształcenie kolumny 'date' na rok, miesiąc, dzień
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
@@ -103,35 +104,26 @@ def load_and_preprocess_data():
     return X, y
 
 
-# Perform AutoML analysis with TPOT
+# Perform AutoML analysis with TPOT and display top 3 models
 def perform_automl(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+    # Inicjalizacja TPOT i dopasowanie modelu
     tpot = TPOTRegressor(generations=5, population_size=20, verbosity=2, random_state=42)
     tpot.fit(X_train, y_train)
 
-    print("Najlepszy model wybrany przez TPOT:")
-    print(tpot.fitted_pipeline_)
+    # Zbieranie wyników dla wszystkich testowanych modeli
+    model_scores = []
+    for pipeline_string, pipeline in tpot.evaluated_individuals_.items():
+        score = pipeline.get("internal_cv_score", float('-inf'))  # Pobierz wynik CV dla modelu
+        model_scores.append((pipeline_string, score))
 
-    y_pred = tpot.predict(X_test)
-    rmse = mean_squared_error(y_test, y_pred, squared=False)
-    with open("model_report.json", "w") as f:
-        json.dump({"RMSE": rmse}, f, indent=4)
+    # Sortowanie modeli według wyników walidacji krzyżowej (od najwyższego do najniższego)
+    top_models = sorted(model_scores, key=itemgetter(1), reverse=True)[:3]
 
-    tpot.export("best_model_pipeline.py")
+    # Wyświetlanie trzech najlepszych modeli
+    print("Trzy najlepsze modele wybrane przez TPOT:")
+    for i, (model, score) in enumerate(top_models, 1):
+        print(f"{i}. Model: {model} | Wynik CV: {score}")
 
-
-if __name__ == "__main__":
-    download_data()
-    df = pd.read_csv("data.csv")
-    data_exploration(df)
-    analyze_distributions(df)
-    analyze_missing_values(df)
-    correlation_matrix(df)
-    generate_eda_report(df)
-    train, additional_train = split_data(df)
-    train.to_csv("train.csv", index=False)
-    additional_train.to_csv("additional_train.csv", index=False)
-
-    X, y = load_and_preprocess_data()
-    perform_automl(X, y)
+    # Wybór najlepszego model
