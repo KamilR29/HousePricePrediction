@@ -42,15 +42,3 @@ Głównym celem projektu jest stworzenie modelu predykcyjnego, który przewiduje
 3. **Ewaluacja i optymalizacja modelu** – porównanie wyników różnych modeli, wybranie najlepszego i jego dalsza optymalizacja.
 4. **Dokumentacja i wizualizacja wyników** – przygotowanie raportu końcowego oraz wizualizacja wyników, aby zapewnić zrozumienie działania i skuteczności modelu.
 
-## 4. Struktura Pracy nad Modelem
-
-Poniżej przedstawiono diagram przepływu pracy nad modelem, który przedstawia główne etapy projektu:
-
-```mermaid
-flowchart TD
-    A[Zbieranie i analiza danych] --> B[Przetwarzanie danych i oczyszczanie]
-    B --> C[Analiza eksploracyjna danych (EDA)]
-    C --> D[Wykorzystanie AutoML do selekcji modelu]
-    D --> E[Trening i optymalizacja najlepszego modelu]
-    E --> F[Ewaluacja modelu na zbiorze testowym]
-    F --> G[Dokumentacja i raport końcowy]
