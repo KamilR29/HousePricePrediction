@@ -3,11 +3,12 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 from tpot import TPOTRegressor
 import sweetviz as sv
 import json
 from operator import itemgetter
+from sklearn.base import clone
 
 # Ustawienia do wizualizacji
 sns.set(style="whitegrid")
@@ -144,6 +145,36 @@ def perform_automl(X, y):
     # Zapis najlepszej pipeline
     tpot.export("best_model_pipeline.py")
 
+    # Zwraca najlepszy model (fitted_pipeline) do dalszego użytku
+    return tpot.fitted_pipeline_
+
+
+# Train and evaluate the prototype model
+def train_prototype_model(model, X, y):
+    # Podziel dane na zbiór treningowy i walidacyjny (70%-30%)
+    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.3, random_state=42)
+
+    # Dopasowanie modelu na zbiorze treningowym
+    prototype_model = clone(model)
+    prototype_model.fit(X_train, y_train)
+
+    # Przewidywanie i ewaluacja na zbiorze walidacyjnym
+    y_pred = prototype_model.predict(X_val)
+    mae = mean_absolute_error(y_val, y_pred)
+    rmse = mean_squared_error(y_val, y_pred, squared=False)
+
+    print("\nEwaluacja modelu prototypowego:")
+    print(f"Mean Absolute Error (MAE): {mae}")
+    print(f"Root Mean Squared Error (RMSE): {rmse}")
+
+    # Zapisanie wyników do pliku JSON
+    metrics = {
+        "MAE": mae,
+        "RMSE": rmse
+    }
+    with open("prototype_model_metrics.json", "w") as f:
+        json.dump(metrics, f, indent=4)
+
 
 if __name__ == "__main__":
     download_data()
@@ -158,4 +189,9 @@ if __name__ == "__main__":
     additional_train.to_csv("additional_train.csv", index=False)
 
     X, y = load_and_preprocess_data()
-    perform_automl(X, y)
+
+    # Wykonaj AutoML i otrzymaj najlepszy model
+    best_model = perform_automl(X, y)
+
+    # Przeprowadź trening prototypowego modelu
+    train_prototype_model(best_model, X, y)
