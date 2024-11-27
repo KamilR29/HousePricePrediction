@@ -10,4 +10,5 @@ RUN apt-get update --allow-releaseinfo-change && \
 
 # Przełącz na użytkownika airflow i zainstaluj biblioteki Python
 USER airflow
-RUN pip install --no-cache-dir scikit-learn pandas kaggle gspread oauth2client
+RUN pip install --no-cache-dir scikit-learn pandas kaggle gspread oauth2client seaborn tpot
+
