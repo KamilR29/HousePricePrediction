@@ -42,3 +42,4 @@ Głównym celem projektu jest stworzenie modelu predykcyjnego, który przewiduje
 3. **Ewaluacja i optymalizacja modelu** – porównanie wyników różnych modeli, wybranie najlepszego i jego dalsza optymalizacja.
 4. **Dokumentacja i wizualizacja wyników** – przygotowanie raportu końcowego oraz wizualizacja wyników, aby zapewnić zrozumienie działania i skuteczności modelu.
 
+new
