@@ -103,5 +103,3 @@ Projekt wykorzystuje pipeline uczenia maszynowego z automatycznym wyborem modelu
 - `/opt/airflow/models/`: Przechowuje wytrenowane modele.
 - `/opt/airflow/reports/`: Zawiera raporty walidacyjne i wskaźniki jakości.
 
-Dokumentacja ta zapewnia jasne zrozumienie celów projektu, danych, modelu i sposobu użycia, co ułatwia jego odtworzenie i adaptację do przyszłych zastosowań.
-
