@@ -1,45 +1,140 @@
-# House Price Prediction Project
+1. Opis Projektu
+Cel Projektu
+Projekt Prognozowania Cen Domów ma na celu stworzenie modelu predykcyjnego, który przewiduje cenę domu na podstawie różnych atrybutów. Narzędzie to ma wspierać specjalistów ds. nieruchomości, inwestorów oraz indywidualnych nabywców w podejmowaniu świadomych decyzji poprzez dostarczanie dokładnych prognoz cen.
 
-## 1. Opis Tematu i Problemu Biznesowego
+Dane Wykorzystane w Projekcie
+Źródło: Dane pochodzą z zestawu danych Kaggle "House Sales in King County, USA."
 
-Ceny nieruchomości są kluczowym czynnikiem dla sektora nieruchomości, inwestorów, agentów oraz klientów indywidualnych. Dokładne prognozowanie cen domów pomaga nie tylko w podejmowaniu lepszych decyzji inwestycyjnych, ale także w ocenie wartości rynkowej nieruchomości. Projekt ten ma na celu stworzenie modelu predykcyjnego, który przewiduje cenę domu na podstawie różnych atrybutów, takich jak powierzchnia, liczba pokoi, lokalizacja, stan techniczny budynku oraz inne cechy fizyczne. 
+Zawartość:
 
-Głównym celem projektu jest stworzenie prototypowego modelu predykcyjnego, który zminimalizuje błąd prognozy, pozwalając na bardziej precyzyjne szacowanie cen domów, co może wspierać decyzje zakupowe i sprzedażowe na rynku nieruchomości.
+Zbór danych zawiera 4600 rekordów dotyczących sprzedaży domów w hrabstwie King, stan Waszyngton, USA.
 
-## 2. Źródło Danych i Charakterystyka
+Atrybuty obejmują:
 
-### Źródło Danych
-Dane do projektu pochodzą z **[Kaggle - House Sales in King County, USA](https://www.kaggle.com/datasets/shree1992/housedata)**. Zbiór danych zawiera informacje o domach sprzedanych w regionie King County w stanie Waszyngton, USA.
+date: Data sprzedaży
 
-### Charakterystyka Danych
-Zbiór danych zawiera 4600 rekordów, z informacjami na temat sprzedanych domów, w tym następujące kolumny:
+price: Cena sprzedaży (zmienna docelowa)
 
-- `date`: Data sprzedaży domu.
-- `price`: Cena sprzedaży domu (wartość docelowa do przewidywania).
-- `bedrooms`: Liczba sypialni.
-- `bathrooms`: Liczba łazienek.
-- `sqft_living`: Powierzchnia mieszkalna (w stopach kwadratowych).
-- `sqft_lot`: Powierzchnia działki (w stopach kwadratowych).
-- `floors`: Liczba pięter.
-- `waterfront`: Wskaźnik obecności widoku na wodę.
-- `view`: Ocena widoku (0-4).
-- `condition`: Stan techniczny budynku (1-5).
-- `sqft_above`: Powierzchnia nad poziomem ziemi.
-- `sqft_basement`: Powierzchnia piwnicy.
-- `yr_built`: Rok budowy domu.
-- `yr_renovated`: Rok ostatniego remontu.
-- `street`, `city`, `statezip`, `country`: Lokalizacja nieruchomości.
+Cecha takie jak: bedrooms, bathrooms, sqft_living, sqft_lot, floors, waterfront, view, condition, sqft_above, sqft_basement, yr_built, yr_renovated oraz lokalizacyjne pola.
 
-### Uzasadnienie Wyboru Danych
-Dane te zostały wybrane, ponieważ zawierają szczegółowe informacje o sprzedaży nieruchomości, które są niezbędne do budowy modelu predykcyjnego dla cen domów. Zawierają różnorodne cechy, które mogą mieć wpływ na cenę nieruchomości, takie jak powierzchnia, liczba pokoi, stan techniczny, rok budowy, a także lokalizacja. Dzięki tak szerokiej gamie zmiennych, model będzie mógł analizować, jakie cechy mają największy wpływ na wartość nieruchomości i dokonywać dokładnych prognoz.
+Te atrybuty zostały wybrane w celu zapewnienia analizy różnorodnych czynników wpływających na ceny nieruchomości.
 
-## 3. Cele Projektu
+2. Opis Modelu
+Wykorzystany Model
+Projekt wykorzystuje pipeline uczenia maszynowego z automatycznym wyborem modelu i dostrajaniem hiperparametrów za pomocą biblioteki AutoML (np. TPOT).
 
-Głównym celem projektu jest stworzenie modelu predykcyjnego, który przewiduje cenę domu na podstawie wybranych cech nieruchomości. Cele szczegółowe obejmują:
+Uzasadnienie Wyboru Modelu
+AutoML zapewnia:
 
-1. **Przygotowanie i wstępna analiza danych** – eksploracja i oczyszczenie danych w celu usunięcia wartości odstających, braków oraz sprawdzenie rozkładów cech.
-2. **Budowa modelu predykcyjnego** – wykorzystanie narzędzi AutoML (takich jak TPOT) do automatycznego wyboru modeli i dostosowania hiperparametrów, aby uzyskać najlepsze możliwe wyniki.
-3. **Ewaluacja i optymalizacja modelu** – porównanie wyników różnych modeli, wybranie najlepszego i jego dalsza optymalizacja.
-4. **Dokumentacja i wizualizacja wyników** – przygotowanie raportu końcowego oraz wizualizacja wyników, aby zapewnić zrozumienie działania i skuteczności modelu.
+Systematyczne przeszukiwanie różnych algorytmów.
 
-new
+Optymalny dobór hiperparametrów.
+
+Wybrany model minimalizuje błąd prognozy i skutecznie przetwarza dane wielowymiarowe.
+
+Podejście to pozwala na bezproblemową adaptację do nowych danych przy minimalnej interwencji manualnej.
+
+3. Instrukcja Użytkowania
+Pobieranie Aplikacji
+Sklonuj repozytorium projektu:
+
+
+
+git clone <adres-repozytorium>
+cd <folder-repozytorium>
+Zainstaluj wymagane zależności:
+
+
+
+pip install -r requirements.txt
+Upewnij się, że posiadasz poświadczenia API Kaggle:
+
+Pobierz klucz API z Kaggle (Przewodnik).
+
+Ustaw zmienne środowiskowe dla KAGGLE_USERNAME i KAGGLE_KEY.
+
+Uruchamianie Aplikacji
+Środowisko Lokalne
+Pobierz i przetwórz dane:
+
+Przejdź do katalogu z projektem.
+
+Uruchom DAG przetwarzania danych:
+
+
+
+airflow dags trigger data_processing_dag
+Podziel dane na zbiory treningowe i testowe:
+
+Uruchom DAG podziału danych:
+
+
+
+airflow dags trigger split_data_dag
+Przeprowadź trenowanie i walidację modelu:
+
+Uruchom DAG trenowania modelu:
+
+
+
+airflow dags trigger model_training_dag
+Uzyskaj wyniki:
+
+Przetworzone zbiory danych i artefakty modelu zostaną zapisane w skonfigurowanych katalogach wyjściowych.
+
+Korzystanie z Konfiguracji Dockerowej
+Zbuduj i uruchom kontener Dockera:
+
+Upewnij się, że pliki docker-compose.yaml i Dockerfile znajdują się w katalogu projektu.
+
+Uruchom:
+
+
+
+docker-compose up --build
+Uzyskaj dostęp do Airflow przez interfejs webowy:
+
+URL: http://localhost:8080
+
+Domyślne dane logowania:
+
+Nazwa użytkownika: admin
+
+Hasło: admin
+
+Uruchamiaj DAGi z poziomu interfejsu Airflow.
+
+Wyniki i Raporty
+Wyniki predykcji, raporty walidacyjne modelu oraz przetworzone dane są zapisywane w określonych katalogach wewnątrz kontenera.
+
+Raporty mogą być również dostępne w Google Sheets, jeśli zostały skonfigurowane.
+
+Uwagi
+Upewnij się, że Twoja maszyna lub kontener Docker posiada wystarczające zasoby (RAM i CPU) do przetwarzania danych i trenowania modeli.
+
+Zaktualizuj plik .env o niezbędne zmienne środowiskowe, jeśli korzystasz z Dockera.
+
+4. Struktura Plików
+Skrypty DAG:
+
+data_processing_dag.py: Obsługuje pobieranie, czyszczenie i wstępne przetwarzanie danych.
+
+split_data_dag.py: Dzieli dane na zbiory treningowe i testowe.
+
+model_training_dag.py: Przeprowadza trenowanie i walidację modelu.
+
+Pliki Konfiguracyjne:
+
+docker-compose.yaml: Definiuje konteneryzowane środowisko do uruchamiania Airflow.
+
+data_processing.yml: Definiuje pipeline CI/CD do przetwarzania i analizy danych.
+
+Katalogi Wyjściowe:
+
+/opt/airflow/processed_data/: Zawiera przetworzone zbiory danych.
+
+/opt/airflow/models/: Przechowuje wytrenowane modele.
+
+/opt/airflow/reports/: Zawiera raporty walidacyjne i wskaźniki jakości.
+
+Dokumentacja ta zapewnia jasne zrozumienie celów projektu, danych, modelu i sposobu użycia, co ułatwia jego odtworzenie i adaptację do przyszłych zastosowań.
